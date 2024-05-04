@@ -1,0 +1,90 @@
+/* getFiles.css */
+
+/* Container styles */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Heading styles */
+  h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #333;
+    text-align: center; /* Center align the header */
+  }
+  
+  /* Form styles */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  /* Email input styles */
+  input[type="email"] {
+    width: 100%;
+    max-width: 400px; /* Limit width for larger screens */
+    padding: 15px;
+    font-size: 18px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  /* Submit button styles */
+  button[type="submit"] {
+    padding: 15px 40px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Extracted info container styles */
+  .extracted-info {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Left align content */
+  }
+  
+  /* Extracted info heading styles */
+  .extracted-info h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Extracted info list styles */
+  .extracted-info ul {
+    padding: 0;
+  }
+  
+  /* Extracted info item styles */
+  .extracted-info li {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #666;
+  }
+  
+  /* Horizontal rule styles */
+  hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 30px 0;
+  }
+  
