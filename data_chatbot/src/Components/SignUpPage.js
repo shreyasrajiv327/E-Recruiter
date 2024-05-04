@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './SignUpPage.css';
-import HomePage from '/Users/shreyasr/Documents/AI-Recruiter/data_chatbot/src/Components/Homepage.js';
+import HomePage from '/Users/shreyasr/Documents/E-Recruiter/data_chatbot/src/Components/Homepage.js';
 
 const SignupPage = () => {
   const [name, setName] = useState('');

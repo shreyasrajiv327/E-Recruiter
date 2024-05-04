@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './JobDescription.css'; // Import CSS file for styling
-import RecruiterBase from './RecruiterBase';
 
 function Chatbot({ recruiterEmail }) {
   const [step, setStep] = useState(0);

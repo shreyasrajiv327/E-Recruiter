@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './LoginPage.css'; // Import CSS file here
-import RecruiterBase from '/Users/shreyasr/Documents/AI-Recruiter/data_chatbot/src/Components/Recruiter/RecruiterBase.js'; // Import the RecruiterBase component
-import ApplicantBase from '/Users/shreyasr/Documents/AI-Recruiter/data_chatbot/src/Components/Applicant/ApplicantBase.js';
-import HomePage from '/Users/shreyasr/Documents/AI-Recruiter/data_chatbot/src/Components/Homepage.js';
+import RecruiterBase from '/Users/shreyasr/Documents/E-Recruiter/data_chatbot/src/Components/Recruiter/RecruiterBase.js'; // Import the RecruiterBase component
+import ApplicantBase from '/Users/shreyasr/Documents/E-Recruiter/data_chatbot/src/Components/Applicant/ApplicantBase.js';
+import HomePage from '/Users/shreyasr/Documents/E-Recruiter/data_chatbot/src/Components/Homepage.js';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');

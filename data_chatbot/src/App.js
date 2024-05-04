@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import HomePage from '/Users/shreyasr/Documents/AI-Recruiter/data_chatbot/src/Components/Homepage.js';
+import HomePage from '/Users/shreyasr/Documents/E-Recruiter/data_chatbot/src/Components/Homepage.js';
 function App() {
   return (
     <div className="app-container">
