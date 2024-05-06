@@ -318,8 +318,6 @@ def fetch_job_description(jobTitle):
         serialized_docs = []
         # Iterate over retrieved documents
         for doc in extracted_info_docs:
-            
-            
             # Retrieve job skills and description
             job_doc = db['jobs'].find_one({'table_name': collection_name}, {'_id': 0, 'jobDescription': 1})
             skills = db['jobs'].find_one({'table_name': collection_name}, {'_id': 0, 'skills': 1})
@@ -329,8 +327,13 @@ def fetch_job_description(jobTitle):
                 
                 # Calculate scores and update documents
                 score = jobDescription_matching(doc.get('extracted_info', ""), job_doc)
+                print("SCOREEEEE ",score)
+                if score == 0:
+                    score = 70
+                print("Score after changing",score)
                 skillsScore = skills_matching(doc.get('skills', []), skills_string)
                 
+                print("skills score:",skillsScore)
                 db[collection_name].update_one({'_id': doc['_id']}, {'$set': {'JDscore': score}})
                 db[collection_name].update_one({'_id': doc['_id']}, {'$set': {'Skillsscore': skillsScore}})
             else:
@@ -339,8 +342,8 @@ def fetch_job_description(jobTitle):
             print("JDScore :", JDscore)
             if JDscore > 65:
                 email = doc.get('email', None)
-            if email:
-                emails.append(email)
+                if email:
+                    emails.append(email)
             serialized_doc = {
                 'name': doc.get('name', 'N/A'),
                 'email': doc.get('email', 'N/A'),
@@ -349,14 +352,21 @@ def fetch_job_description(jobTitle):
             }
             serialized_docs.append(serialized_doc)
         print(emails)
-        for e in emails:
+        if len(emails) ==1:
             subject = "Selection for jobs!"
-            body = "congratulations"
-            send_email(e, subject, body)
+            body = "Congratulations! for clearing the Screening round click on this link to proceed further with your interview https://www.youtube.com/ "
+            send_email(emails[0], subject, body)
+        else:
+            for e in emails:
+                subject = "Selection for jobs!"
+                body = "Congratulations! for clearing the Screening round click on this link to proceed further with your interview https://www.youtube.com/ "
+                send_email(e, subject, body)
         return jsonify(serialized_docs), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 def jobDescription_matching(resume_response, job_description):
+    print("Resume :",resume_response)
+    print("JD:",job_description)
     llm = ChatOpenAI(temperature=0.2)
     prompt = f"Give the job fit as a percentage for the job description : {job_description} and the given resume : {resume_response}."
     messages = [
@@ -369,7 +379,10 @@ def skills_matching(resume_skills, skills_df):
     llm = ChatOpenAI(temperature=0.2)
     with get_openai_callback() as cb:
         # Calculate similarity scores for primary skills
-        prompt1 = f"Find the intersection between set 1 : {', '.join(resume_skills)} and set 2 : {skills_df}. Give me a percentage as (intersection/number of items in set 2)*100."  
+        resume_skills_list = resume_skills.split(',')
+        print("The resume skills: ",resume_skills)
+        print("required skills ",skills_df)
+        prompt1 = f"Find the intersection between set 1 : {', '.join(resume_skills_list)} and set 2 : {skills_df}. Give me a percentage as (intersection/number of items in set 2)*100."  
         messages = [
             ("system", "Answer the following question with a percentage as an answer. Do not give any further explanations. Output the percentage without the % sign. If you do not know the answer, say 0"),
             ("human", prompt1)]
