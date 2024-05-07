@@ -3,17 +3,13 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from bson import ObjectId
 from dotenv import load_dotenv
-import os
-import csv
 from langchain_community.callbacks import get_openai_callback
-import pandas as pd
 from langchain_openai import ChatOpenAI
 from langchain.schema.document import Document
 from langchain.llms import OpenAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.schema.document import Document
 from PyPDF2 import PdfReader
-import io
 import base64
 from email.mime.text import MIMEText
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -324,14 +320,11 @@ def fetch_job_description(jobTitle):
             if skills:
                 skills_array = skills.get("skills", [])
                 skills_string = ", ".join(skills_array)
-                
+                print("SKILLS OF THIS PERSON ARE :",skills_string)
                 # Calculate scores and update documents
-                score = jobDescription_matching(doc.get('extracted_info', ""), job_doc)
-                print("SCOREEEEE ",score)
-                if score == 0:
-                    score = 70
-                print("Score after changing",score)
-                skillsScore = skills_matching(doc.get('skills', []), skills_string)
+                score = jobDescription_matching(str(doc.get('extracted_info', "")), str(job_doc))
+             
+                skillsScore = skills_matching(str(doc.get('skills', [])), skills_string)
                 
                 print("skills score:",skillsScore)
                 db[collection_name].update_one({'_id': doc['_id']}, {'$set': {'JDscore': score}})
@@ -365,12 +358,12 @@ def fetch_job_description(jobTitle):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 def jobDescription_matching(resume_response, job_description):
-    print("Resume :",resume_response)
-    print("JD:",job_description)
+    resume = resume_response.replace('\n',' ')
+    jd=job_description.replace('\n',' ')
     llm = ChatOpenAI(temperature=0.2)
-    prompt = f"Give the job fit as a percentage for the job description : {job_description} and the given resume : {resume_response}."
+    prompt = f"Give the job fit as a percentage for the job description : {jd} and the given resume : {resume}."
     messages = [
-    ("system", "Answer the following question with a percentage as an answer. Do not give any further explanations. Output the percentage without the % sign. If you do not know the answer, say 0"),
+    ("system", "Answer the following question with a percentage as an answer. Do not give any further explanations. Output the percentage without the % sign.Always give me a proper percentage for the match"),
     ("human", prompt)]
     jobDescription_matching_score = llm.invoke(messages)
     print("Job Description Matching Score :" , jobDescription_matching_score.content)
@@ -380,11 +373,11 @@ def skills_matching(resume_skills, skills_df):
     with get_openai_callback() as cb:
         # Calculate similarity scores for primary skills
         resume_skills_list = resume_skills.split(',')
-        print("The resume skills: ",resume_skills)
-        print("required skills ",skills_df)
-        prompt1 = f"Find the intersection between set 1 : {', '.join(resume_skills_list)} and set 2 : {skills_df}. Give me a percentage as (intersection/number of items in set 2)*100."  
+        print("REQUIRED SKILLS :",resume_skills_list)
+        print("SKILLS OF THE APPLICANT:",skills_df)
+        prompt1 = f"Find the skill percentage match between the list of required skills :{resume_skills_list} and the skills of an applicant :{skills_df}"  
         messages = [
-            ("system", "Answer the following question with a percentage as an answer. Do not give any further explanations. Output the percentage without the % sign. If you do not know the answer, say 0"),
+            ("system", "Answer the following question with a percentage as an answer. Do not give any further explanations. Output the percentage without the % sign.Always give me a proper percentage for the match"),
             ("human", prompt1)]
         primary_similarity_scores = llm.invoke(messages)
         print("Primary Skills Match :" , primary_similarity_scores.content)
